@@ -5,14 +5,19 @@ $(document).ready(function(){
 	window.path 	= [];
 	window.visited 	= [];
 	window.nodes 	= [];
-	window.cursor 	= {x:0,y:0		}
+	window.cursor 	= {x:0,y:0}
 	window.old 		= {x:0,y:0}
-	window.final 	= {x:window.rows,y:window.cols}
+	window.final 	= {x:window.cols-1,y:window.rows-1}
 	window.hits 	= 0;
+	window.reached  = {x:0,y:0}
+
+	window.cursor.x = 2;
+	window.cursor.y = 2;
 
 	createMesh();
-	createDestination();
+	createBoundaryWall();
 	cellFunctions();	
+	createDestination();
 });
 
 function createMesh(){
@@ -31,8 +36,8 @@ function createMesh(){
 }
 
 function createDestination(){
-	$("#cell_"+window.cols+"-"+window.rows).addClass("destination");
-}
+	$("#cell_"+(window.cols-1)+"-"+(window.rows-1)).addClass("destination");
+	}
 
 function cellFunctions(){
 	$('table').on('mousedown',function(){
@@ -54,46 +59,80 @@ function cellFunctions(){
 
 }
 
+function createBoundaryWall(){
+	var x = window.cols;
+	var y = window.rows;
+
+	for(var i=1; i<=x; i++){
+		$("#cell_"+i+"-"+y).addClass("wall");
+		$("#cell_"+i+"-"+1).addClass("wall");
+	}
+
+	for(var i=1; i<=x; i++){
+		$("#cell_"+x+"-"+i).addClass("wall");
+		$("#cell_"+1+"-"+i).addClass("wall");
+	}
+}
+
 function getPath(){
-	while(1){
-		if(isWall()){
-			alert("HIT WALL");
-			console.log(window.nodes);
-			break;
-		}
+	// $("#cell_"+window.cursor.x+"-"+window.cursor.y).addClass("mark");
+	// while(1){
 
 		if(window.cursor.x < window.final.x){
-			if(wall().right){
-				procesNodes();
-				break;
-			}else{
-				window.cursor.x+=1;
+			if(!wall().right){
+				window.cursor.x++;
+				// console.log("Adding x");
+				$("#cell_"+window.cursor.x+"-"+window.cursor.y).addClass("mark");			
 			}
-		} 
+			else{
+				console.log("WALL HIT. SKIPPING");
+			}
+		}else if(window.cursor.x == window.final.x){
+			// window.reached.x = 1;
+			console.log("X REACHED");
+		}
 
 		if(window.cursor.y < window.final.y){
-			if(wall().down){
-				procesNodes();
-				break;
-			}else{
-				window.cursor.y+=1;
+			if(!wall().down){
+					window.cursor.y++;
+					// console.log("Adding y");
+					$("#cell_"+window.cursor.x+"-"+window.cursor.y).addClass("mark");	
 			}
+			else{
+				console.log("WALL HIT. SKIPPING");
+			}
+		}else if(window.cursor.y == window.final.y){
+			// window.reached.y = 1;
+			console.log("Y REACHED")
+		}
+
+		// reverse when hit 
+		if(wall().right && wall().down && (!(window.cursor.x==window.final.x) || !(window.cursor.y == window.final.y)) ){
+			while(wall().right){
+				if(!wall().up){
+					window.cursor.y--;
+					$("#cell_"+window.cursor.x+"-"+window.cursor.y).addClass("mark");
+				}else{
+					alert("I'm DEAD");
+					break;
+				}
+			}
+			window.cursor.x++;
+			$("#cell_"+window.cursor.x+"-"+window.cursor.y).addClass("mark");	
+		}else{
+			console.log("NOT CLIMBING");
 		}
 
 		if(window.cursor.x == window.final.x && window.cursor.y == window.final.y){
-			alert("DONE !");
-			break;
+			alert("REACHED");
+			return;
 		}
-
-		window.path.push([window.cursor.x, window.cursor.y]);
-	}
-
-	window.path.forEach(function(x){
-		$("#cell_"+x[1]+"-"+x[0]).addClass("player");
-	})
-	// alert("HIT");
+	// }
 }
 
+function procesNodes(){
+	// getPath();
+}
 
 function wall(){
 	var res = {
@@ -123,7 +162,6 @@ function isWall(){
 		return false;
 }
 
-function procesNodes(){
-	window.nodes.push([window.cursor.x, window.cursor.y]);
-	console.log(window.nodes);
+function flow(){
+	setInterval(getPath(), 200);
 }

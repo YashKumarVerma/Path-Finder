@@ -13,7 +13,8 @@ td:hover{
 
 /*wall color*/
 td.wall{
-	background-color:brown;
+	/*background-color:brown;*/
+	background-color:silver;
 }
 
 /*ourside border*/
@@ -22,12 +23,8 @@ td.wall{
 }
 
 /*starting and ending point*/
-#cell_1-1{
+#cell_2-2{
 	background-color: green;
-}
-
-#cell_20-100{
-	background-color: red;
 }
 
 .destination{
@@ -35,5 +32,9 @@ td.wall{
 }
 
 .player{
+	background-color:blue;
+}
+
+.mark{
 	background-color:blue;
 }

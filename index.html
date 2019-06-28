@@ -7,13 +7,14 @@
 <body>
 
 
-Configuration: X : <span id="cols">100</span> Y :<span id="rows">20</span>   
+Configuration: X : <span id="cols">100</span> Y :<span id="rows">40</span>   
+<!-- Configuration: X : <span id="cols">20</span> Y :<span id="rows">20</span>    -->
 <!-- main work area -->
 <div class="tableHolder"><table></table></div>
 
 <!-- function buttons -->
-<button onclick="getPath()">Get Path</button>
-
+<button onclick="getPath()">Move a bit</button>
+<button onclick="setInterval(function(){getPath()}, 100);">Flow</button>
 
 
 </body>
