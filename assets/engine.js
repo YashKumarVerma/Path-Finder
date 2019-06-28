@@ -125,6 +125,7 @@ function getPath(){
 
 		if(window.cursor.x == window.final.x && window.cursor.y == window.final.y){
 			alert("REACHED");
+			window.finish =1;
 			return;
 		}
 	// }
@@ -163,5 +164,9 @@ function isWall(){
 }
 
 function flow(){
-	setInterval(getPath(), 200);
+	setInterval(function(){
+		if(!window.finish){
+			getPath();
+		}
+	}, 100);
 }
